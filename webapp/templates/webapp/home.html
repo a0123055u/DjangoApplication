@@ -1,8 +1,137 @@
 {% extends "webapp/header.html" %}
+{% block content %}
+<html ng-app="myApp">
+<head>
+    <meta charset="UTF-8">
+ <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.js"></script>
+    <!--<script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>-->
+    <!--<script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>-->
+    <!--<script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>-->
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+
+
+    <title>Home PAGE</title>
+</head>
+<body ng-controller="MyCtrl">
+<!--<h1>HI hi hhhhi</h1>-->
+<div id="exTab3" class="container">
+  <h3>Choose Category you want to shop</h3>
+
+  <ul class="nav nav-pills">
+    <li class="active" data-toggle="tab" ><a href="#1a">Electronics</a></li>
+    <li   ><a href="#1b" data-toggle="tab">Clothings</a></li>
+    <li  ><a href="#1c" data-toggle="tab">Books</a></li>
+    <li  ><a href="#1d" data-toggle="tab">House hold goods</a></li>
+  </ul>
+
+        <div class="tab-content clearfix">
+			  <div class="tab-pane active" id="1a">
+                     <!--<h3>Electronics</h3>-->
+<div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+                     <!--<div class="gridStyle" ng-grid="gridOptions"></div>-->
+              </div>
+			  <div class="tab-pane " id="1b">
+                    <div id="grid2" ui-grid="{ data: myData }" class="grid"></div>
+              </div>
+			  <div class="tab-pane " id="1c">
+                   <div id="grid3" ui-grid="{ data: myData }" class="grid"></div>
+              </div>
+			  <div class="tab-pane " id="1d">
+                  <div id="grid4" ui-grid="{ data: myData }" class="grid"></div>
+              </div>
+
+        </div>
+
+
+
+</div>
 
 
 
 
- {% block content %}
- <p>Hey, Welcome to my WebSite I am Programmer!/p>
+
+</body>
+<script>
+
+    var app = angular.module('myApp', ['ngTouch','ui.grid','ui.grid.edit','ui.grid.pinning']);
+app.controller('MyCtrl',['$scope','$log',function($scope,$log) {
+
+ $scope.gridOptions = {};
+$scope.gridOptions.columnDefs = [
+    { name:'Model', width:250, pinnedLeft:true },
+    { name:'Price', width:100, pinnedLeft:true },
+    { name:'Company', width:100, pinnedLeft:true  },
+    { name:'Discount', width:150  },
+     { name:'Cart', width:150  },]
+
+    $scope.gridOptions.data = [ {
+        "Model": "HTC ONE",
+        "Price": "$500",
+        "Company": "HTC",
+        "Discount": "10%",
+        "Cart":'<button ng-click="grid.myApp.clickHandler()">+</button>',
+    },
+    {
+        "Model": "HTC Desire 728 dual sim",
+        "Price": "$700",
+        "Company": "HTC",
+        "Discount": "12%"
+    },
+    {
+        "Model": "HTC U11 ",
+        "Price": "$900",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC U Ultra ",
+        "Price": "$780",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC U Play ",
+        "Price": "$560",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC One A9s ",
+        "Price": "$600",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC Desire 10 pro dual Sim ",
+        "Price": "$451",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC 10 ",
+        "Price": "$390",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC Desire 830 dual Sim ",
+        "Price": "$200",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC 628 Desire Dual Sim ",
+        "Price": "$564",
+        "Company": "HTC",
+        "Discount": "10%"
+    },{
+        "Model": "HTC One X9 ",
+        "Price": "$746",
+        "Company": "HTC",
+        "Discount": "10%"
+    },];
+
+}]);
+
+</script>
+
+</html>
  {% endblock %}

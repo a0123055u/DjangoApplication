@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import url,include
 from django.contrib import admin
 
+from webapp.views import testpost
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^webapp/',include('webapp.urls')),
-    
+# url(r'^postuserdetails',include('webapp.urls')),
+url(r'^testpost',include('webapp.urls'))
 ]
