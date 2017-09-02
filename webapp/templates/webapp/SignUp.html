@@ -1,0 +1,161 @@
+{% extends "webapp/header.html" %}
+ {% block content %}
+ <p>Hey, Welcome to my WebSite !</p>
+
+  <html ng-app="app1" >
+<head>
+ <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular-sanitize.min.js"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script>
+var app1= angular.module('app1',['ngSanitize']);
+
+app1.controller('my',function($scope,$http){
+
+
+$scope.save = function(){
+var errorMsg='';
+var errorMsgFlag=0;
+if(!$scope.name){
+errorMsg+="Name, ";
+errorMsgFlag=1
+}
+else if(!$scope.nationality){
+errorMsg+="Nationality, ";
+errorMsgFlag=1;
+}
+else if(!$scope.phoneNumeber){
+errorMsg+="Phone Number, ";
+errorMsgFlag=1;
+}
+else if(!$scope.gender1){
+errorMsg+="Gender, ";
+errorMsgFlag=1;
+}
+else if(!$scope.email){
+errorMsg+="Email Id/Enter valid email id , ";
+errorMsgFlag=1;
+}
+else if(!$scope.fin){
+errorMsg+="Fin, ";
+errorMsgFlag=1;
+}
+else{
+errorMsgFlag=0;
+}
+
+if(!errorMsgFlag){
+
+                $http({
+                  method: 'POST',
+                  url: 'testpost',
+                   dataType: "json",
+                   data:{ "name": $scope.name,"password":$scope.password,"age": $scope.age,'nationality':$scope.nationality,'gender1':$scope.gender1,'address':$scope.address,'phoneNumeber':$scope.phoneNumeber,'email':$scope.email,'fin':$scope.fin},
+                }).then(function successCallback(response) {
+                console.log("response success"+response.data);
+
+                    if(response.data=='exisit'){
+                        alert('User With Same Email Exisit pls use different Email Id');
+                    }
+                    else{
+                         alert('Saved Successfully');
+                    }
+
+                    // this callback will be called asynchronously
+                    // when the response is available
+                  }, function errorMsgCallback(response) {
+                    // called asynchronously if an errorMsg occurs
+                    // or server returns response with an errorMsg status.
+                    console.log("response failed"+response);
+                  });
+
+
+                }
+        else{
+alert(errorMsg+'is required');
+            }
+        }
+
+});
+
+</script>
+<h1> Sing Up Here as new User</h1>
+</head>
+<body ng-controller="my">
+
+
+
+<table  class="table">
+  <tr>
+    <td ><label>User Name</label></td>
+      <td >
+          <input type="text" ng-model="name" required="string">
+      </td>
+      </tr>
+    <tr>
+          <td><label>Password</label></td>
+        <td><input type="text" ng-model="password" required="string"></td>
+    </tr>
+    <tr>
+             <td><label>Age</label></td>
+        <td><input type="text" ng-model="age" ng-range></td>
+    </tr>
+    <tr>
+          <td><label> Nationality</label></td>
+        <td>
+            <input type="text" ng-model="nationality" required="string">
+        </td>
+    </tr>
+    <tr>
+        <td><label> Gender</label></td>
+       <td>
+            <input type="radio" ng-model="gender1" value="male"  name="male" />Male<input type="radio" ng-model="gender1" value="female"   name="female"/> Female
+       </td>
+    </tr>
+    <tr>
+        <td><label> Address</label></td>
+        <td>
+            <input type="text" ng-model="address">
+        </td>
+    
+    </tr>
+    <tr>
+<td><label> Phone Number</label></td>
+        <td><input type="text" ng-model="phoneNumeber" ng-maxlength="8" required="number"></td>
+    </tr>
+    <tr>
+
+<td><label>Email Id</label></td>
+        <td><input type="email" ng-model="email"></td>
+    </tr>
+    <tr>
+        <td>
+        <label>
+             FIN
+        </label>
+        </td>
+        <td><input type="text" ng-model="fin" ng-maxlength="9"></td>
+
+    </tr>
+
+
+
+
+
+
+
+
+
+</table>
+<div><button ng-click="save()" class="btn-btn-info" >Save</button>
+</div>
+
+</body>
+{% verbatim %} {{age}}{% endverbatim %}
+</html>
+ {% endblock %}

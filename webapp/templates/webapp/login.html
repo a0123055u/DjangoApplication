@@ -1,0 +1,118 @@
+ {% block content %}
+
+<html ng-app="login">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
+<script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+
+
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+<script>
+</head>
+<style>
+    .login{
+    left: 50%;
+    top: 50%;
+
+}
+
+</style>
+<script>
+var app1= angular.module('login',['ngSanitize']);
+
+app1.controller('loginController',function($scope,$http,$sce){
+$scope.signIn=function(){
+alert('Sing In');
+
+         $http({
+                  method: 'POST',
+                  url: 'signin',
+                   dataType: "json",
+                   data:{ "name": $scope.userName,"password":$scope.password},
+                }).then(function successCallback(response) {
+                console.log("response success"+response.data);
+                    console.log(response.data);
+                    if(response.status=='200'){
+                        alert('Welcome');
+                        $scope.rawHtml = $sce.trustAsHtml(response.data);
+                        $scope.hideLogin=true;
+                        console.log(response);
+
+                    }
+                    else if(response.status=='220'){
+                         alert('Wrong Password');
+                    }
+                    else if(response.status=='230'){
+                        alert('Wrong UserName');
+                    }
+                    else{
+                    alert('Error');
+                    }
+
+
+                  }, function errorMsgCallback(response) {
+
+                    console.log("response failed"+response);
+                  });
+
+
+}
+});
+
+
+
+
+</script>
+<body ng-controller="loginController">
+<form method="post" action="{% url 'signin' %}" >
+
+
+
+    <h2>
+        <table class="login">
+            <tr>
+                <td>
+                     <label>User Name</label><input type="text" id="userName" name="userName" ng-model="userName"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label>Password</label><input type="password" id="password" name="password" ng-model="password"/>
+                </td>
+            </tr>
+        </table>
+
+
+
+    </h2>
+
+<div>
+
+   <button type="submit" value="signin" name ="signin" class="btn-btn-info" >Sign In</button>
+    </div>
+    </form>
+        <form action="{% url 'signup' %}" >
+        <button type="submit" value="signup" name="signup" class="btn-btn-info" >Sign Up</button>
+    </form>
+
+
+
+
+
+
+
+
+</body>
+
+
+
+
+
+</html>
+  {% endblock %}
