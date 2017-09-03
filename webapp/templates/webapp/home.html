@@ -13,7 +13,7 @@
         <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
-
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.3/angular-sanitize.min.js"></script>
 
     <title>Home PAGE</title>
 </head>
@@ -50,6 +50,22 @@
 
 
 </div>
+<div class="container">
+<div class="row">
+
+    <div class="col-sm-2 col-3">
+        <button  name="CheckOut" ng-model="checkOut"  class="btn btn-primary">Check Out</button>
+    </div>
+
+
+    <div class="col-sm-2 col-sm-offset+8 col-4">
+        <button name="reSet" ng-model="reSet"  class="btn btn-info"> Reset</button>
+    </div>
+
+</div>
+</div>
+
+
 
 
 
@@ -58,76 +74,115 @@
 </body>
 <script>
 
-    var app = angular.module('myApp', ['ngTouch','ui.grid','ui.grid.edit','ui.grid.pinning']);
-app.controller('MyCtrl',['$scope','$log',function($scope,$log) {
+    var app = angular.module('myApp', ['ngTouch','ui.grid','ui.grid.edit','ui.grid.pinning','ui.grid.selection']);
+app.controller('MyCtrl',['$scope','$log','$timeout','uiGridConstants','$templateCache',function($scope,$log,$timeout,$uiGridConstants,$templateCache) {
 
- $scope.gridOptions = {};
+
+ $templateCache.put('ui-grid/selectionRowHeaderButtons',
+    "<div class=\"ui-grid-selection-row-header-buttons \" ng-class=\"{'ui-grid-row-selected': row.isSelected}\" ><input style=\"margin: 0; vertical-align: middle\" type=\"checkbox\" ng-model=\"row.isSelected\" ng-click=\"row.isSelected=!row.isSelected;selectButtonClick(row, $event)\">&nbsp;</div>"
+  );
+
+
+  $templateCache.put('ui-grid/selectionSelectAllButtons',
+    "<div class=\"ui-grid-selection-row-header-buttons \" ng-class=\"{'ui-grid-all-selected': grid.selection.selectAll}\" ng-if=\"grid.options.enableSelectAll\"><input style=\"margin: 0; vertical-align: middle\" type=\"checkbox\" ng-model=\"grid.selection.selectAll\" ng-click=\"grid.selection.selectAll=!grid.selection.selectAll;headerButtonClick($event)\"></div>"
+  );
+
+ $scope.gridOptions = {
+  enableRowSelection: true,
+  enableSelectAll: true,
+    selectionRowHeaderWidth: 35,
+    rowHeight: 35,
+    showGridFooter:true};
 $scope.gridOptions.columnDefs = [
+    { name: 'id' },
     { name:'Model', width:250, pinnedLeft:true },
     { name:'Price', width:100, pinnedLeft:true },
     { name:'Company', width:100, pinnedLeft:true  },
     { name:'Discount', width:150  },
-     { name:'Cart', width:150  },]
+     { name: 'Cart', displayName: 'Cart', type: 'boolean',cellTemplate: '<input type="checkbox" ng-model="row.entity.cart">'},]
+
+     $scope.gridOptions.multiSelect = true;
+
+
+
 
     $scope.gridOptions.data = [ {
         "Model": "HTC ONE",
         "Price": "$500",
         "Company": "HTC",
         "Discount": "10%",
-        "Cart":'<button ng-click="grid.myApp.clickHandler()">+</button>',
+        "id": 1,
+        <!--'Cart':'<button ng-click="grid.appScope.clickHandler()">Click Here</button>',-->
+        <!--'<button ng-click="grid.myApp.clickHandler()">+</button>',-->
     },
     {
         "Model": "HTC Desire 728 dual sim",
         "Price": "$700",
         "Company": "HTC",
-        "Discount": "12%"
+        "Discount": "12%",
+        "id": 2,
     },
     {
         "Model": "HTC U11 ",
         "Price": "$900",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 3,
     },{
         "Model": "HTC U Ultra ",
         "Price": "$780",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 4,
     },{
         "Model": "HTC U Play ",
         "Price": "$560",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 5,
     },{
         "Model": "HTC One A9s ",
         "Price": "$600",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 6,
     },{
         "Model": "HTC Desire 10 pro dual Sim ",
         "Price": "$451",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 7,
     },{
         "Model": "HTC 10 ",
         "Price": "$390",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 8,
     },{
         "Model": "HTC Desire 830 dual Sim ",
         "Price": "$200",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 9,
     },{
         "Model": "HTC 628 Desire Dual Sim ",
         "Price": "$564",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 10,
     },{
         "Model": "HTC One X9 ",
         "Price": "$746",
         "Company": "HTC",
-        "Discount": "10%"
+        "Discount": "10%",
+        "id": 11
     },];
+    <!--$timeout(function() {-->
+        <!--if($scope.gridApi.selection.selectRow){-->
+          <!--$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);-->
+        <!--}-->
+        <!--});-->
+
 
 }]);
 
