@@ -54,7 +54,7 @@
 <div class="row">
 
     <div class="col-sm-2 col-3">
-        <button  name="CheckOut" ng-model="checkOut"  class="btn btn-primary">Check Out</button>
+        <button  name="CheckOut" ng-model="checkOut"  class="btn btn-primary" ng-click="checkOut()">Check Out</button>
     </div>
 
 
@@ -78,28 +78,31 @@
 app.controller('MyCtrl',['$scope','$log','$timeout','uiGridConstants','$templateCache',function($scope,$log,$timeout,$uiGridConstants,$templateCache) {
 
 
- $templateCache.put('ui-grid/selectionRowHeaderButtons',
-    "<div class=\"ui-grid-selection-row-header-buttons \" ng-class=\"{'ui-grid-row-selected': row.isSelected}\" ><input style=\"margin: 0; vertical-align: middle\" type=\"checkbox\" ng-model=\"row.isSelected\" ng-click=\"row.isSelected=!row.isSelected;selectButtonClick(row, $event)\">&nbsp;</div>"
-  );
+  $scope.data = {
 
-
-  $templateCache.put('ui-grid/selectionSelectAllButtons',
-    "<div class=\"ui-grid-selection-row-header-buttons \" ng-class=\"{'ui-grid-all-selected': grid.selection.selectAll}\" ng-if=\"grid.options.enableSelectAll\"><input style=\"margin: 0; vertical-align: middle\" type=\"checkbox\" ng-model=\"grid.selection.selectAll\" ng-click=\"grid.selection.selectAll=!grid.selection.selectAll;headerButtonClick($event)\"></div>"
-  );
+    availableOptions: [
+      {id: '1', name: '1'},
+      {id: '2', name: '2'},
+      {id: '3', name: '3'}
+    ]
+   };
 
  $scope.gridOptions = {
   enableRowSelection: true,
   enableSelectAll: true,
     selectionRowHeaderWidth: 35,
     rowHeight: 35,
-    showGridFooter:true};
+    showGridFooter:true
+    };
 $scope.gridOptions.columnDefs = [
     { name: 'id' },
     { name:'Model', width:250, pinnedLeft:true },
     { name:'Price', width:100, pinnedLeft:true },
     { name:'Company', width:100, pinnedLeft:true  },
     { name:'Discount', width:150  },
-     { name: 'Cart', displayName: 'Cart', type: 'boolean',cellTemplate: '<input type="checkbox" ng-model="row.entity.cart">'},]
+     { name: 'Cart', displayName: 'Cart', type: 'boolean',cellTemplate: '<input type="checkbox" ng-model="row.entity.cart">'},
+      { name: 'Qty', displayName: 'Qty',cellTemplate: '<select name="repeatSelect" id="repeatSelect" ng-model="data.model"><option ng-repeat="option in data.availableOptions" value="{{option.id}}">{{option.name}}</option></select>'},
+     ]
 
      $scope.gridOptions.multiSelect = true;
 
@@ -182,6 +185,18 @@ $scope.gridOptions.columnDefs = [
           <!--$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);-->
         <!--}-->
         <!--});-->
+
+        $scope.checkOut = function(){
+        var postPayLoad = [];
+        console.log($scope.gridOptions.data);
+        angular.forEach($scope.gridOptions.data,function(k,v){
+        console.log(k);
+            if(k['cart']===true){
+            postPayLoad.push(k);
+            }
+        });
+        console.log("postPayLoad",postPayLoad);
+        }
 
 
 }]);
