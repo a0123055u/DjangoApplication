@@ -31,3 +31,4 @@ class ProductOrders(models.Model):
     email = models.CharField(max_length=125,null=False,blank=False)
     quantity = models.IntegerField(null= False,blank=False)
     dateOfPurchase = models.DateTimeField(default=datetime.now(),null=False,blank=False)
+    price = models.IntegerField(default=0,null=False,blank=False)

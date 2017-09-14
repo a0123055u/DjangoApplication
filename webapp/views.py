@@ -1,5 +1,6 @@
 import json,pdb
 
+import datetime
 from django.shortcuts import render, reverse, redirect, render_to_response
 # Create your views here.
 from django.template.response import TemplateResponse
@@ -8,9 +9,9 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.response import Response
 from django.template import loader
-from webapp.models import user
+from webapp.models import user,ProductOrders,ProductElectronics
 from django.contrib.auth.hashers import make_password, check_password
-
+from django.utils import timezone
 
 
 # from passlib.hash import md5_crypt as md5
@@ -62,7 +63,7 @@ def save(request):
         userInstance.save()
         context = {'data': 'reached', 'response': 'Success'}
         print('entered post')
-        pdb.set_trace()
+
         return HttpResponseRedirect(reverse('relogin'))
         # return JsonResponse({'success': 'reached'}, status=200)
     else:
@@ -70,6 +71,10 @@ def save(request):
         print('not post', request)
         return HttpResponseRedirect(reverse('relogin'))
             # JsonResponse({'error': 'not post'}, status=400)
+
+
+
+
 
 
 def singin(request):
@@ -91,7 +96,8 @@ def singin(request):
                 # url = reverse('content',permanent=True, kwargs={'classname': Content})
                 # return render(request, "webapp/SignUp.html",context=None)
                 # response = TemplateResponse(request, 'webapp/SignUp.html', {})
-
+                request.session['username'] = userName
+                request.session['email']=validUserName.values()[0]['email']
                 return HttpResponseRedirect(reverse('home'))
                 # import pdb
                 # pdb.set_trace()
@@ -111,6 +117,46 @@ def singin(request):
                 return JsonResponse({'error': 'WrongPassword'}, status=220)
         else:
             return JsonResponse({'error': 'Invalid UserName'}, status=230)
+
+
+
+
+def checkOut(request):
+    if request.method == 'POST':
+        post_body = json.loads(request.body)
+        postBody = post_body["postPayLoad"]
+        model=postBody[0]["Model"]
+        # model = [mod.encode('utf-8') for mod in model]
+        price= postBody[0]["Price"]
+        price = price.strip('$')
+        price = int(price)
+        userName = request.session['username']
+        email = request.session['email']
+        qty = 1
+        salesCount = ProductOrders.objects.count()
+        salesCount+=1
+        print salesCount
+        orderId = ('OID'+str(salesCount))
+        print orderId
+        my_datetime= datetime.datetime.now()
+        product = ProductElectronics.objects.filter(modelName=model).first()
+        print 'product>>>>>>>>>>>>>',product
+        my_datetime=timezone.make_aware(my_datetime, timezone.get_current_timezone())
+        order = ProductOrders(orderId=orderId,
+                modelName =product,
+                user = userName,
+                email =email,
+                quantity = qty,
+                price =price,
+                dateOfPurchase=my_datetime)
+        print 'order',order
+        return
+        order.save()
+        print'Sucess......................'
+        return JsonResponse({'Msg': 'Success'}, status=200)
+
+
+
 
 
 

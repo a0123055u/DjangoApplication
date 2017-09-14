@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
  <!--<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.js"></script>-->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-touch.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular-touch.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.0/angular-animate.js"></script>
     <!--<script src="http://ui-grid.info/docs/grunt-scripts/csv.js"></script>-->
     <!--<script src="http://ui-grid.info/docs/grunt-scripts/pdfmake.js"></script>-->
     <!--<script src="http://ui-grid.info/docs/grunt-scripts/vfs_fonts.js"></script>-->
@@ -75,17 +75,10 @@
 <script>
 
     var app = angular.module('myApp', ['ngTouch','ui.grid','ui.grid.edit','ui.grid.pinning','ui.grid.selection']);
-app.controller('MyCtrl',['$scope','$log','$timeout','uiGridConstants','$templateCache',function($scope,$log,$timeout,$uiGridConstants,$templateCache) {
+app.controller('MyCtrl',['$scope','$log','$timeout','uiGridConstants','$templateCache','$http',function($scope,$log,$timeout,$uiGridConstants,$templateCache,$http) {
 
+$scope.data=[{id: '1',Qty: '1'},{id: '2',Qty: '2'}]
 
-  $scope.data = {
-
-    availableOptions: [
-      {id: '1', name: '1'},
-      {id: '2', name: '2'},
-      {id: '3', name: '3'}
-    ]
-   };
 
  $scope.gridOptions = {
   enableRowSelection: true,
@@ -101,7 +94,8 @@ $scope.gridOptions.columnDefs = [
     { name:'Company', width:100, pinnedLeft:true  },
     { name:'Discount', width:150  },
      { name: 'Cart', displayName: 'Cart', type: 'boolean',cellTemplate: '<input type="checkbox" ng-model="row.entity.cart">'},
-      { name: 'Qty', displayName: 'Qty',cellTemplate: '<select name="repeatSelect" id="repeatSelect" ng-model="data.model"><option ng-repeat="option in data.availableOptions" value="{{option.id}}">{{option.name}}</option></select>'},
+      { name: 'Qty', displayName: 'Qty',editableCellTemplate: 'ui-grid/dropdownEditor',width: '20%',editDropdownValueLabel:'Qty',editDropdownOptionsArray:$scope.data}
+      <!--type: 'integer',cellTemplate: '<select name="repeatSelect" id="repeatSelect" ng-model="qty"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>'},-->
      ]
 
      $scope.gridOptions.multiSelect = true;
@@ -195,11 +189,22 @@ $scope.gridOptions.columnDefs = [
             postPayLoad.push(k);
             }
         });
+        $http({ method: 'POST',
+                  url: 'checkout',
+                   dataType: "json",
+                   data:{postPayLoad},
+                }).then(function successCallback(response) {
+                },function error(response){
+
+
+                });
         console.log("postPayLoad",postPayLoad);
         }
 
 
 }]);
+
+
 
 </script>
 
