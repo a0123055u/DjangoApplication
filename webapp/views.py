@@ -32,6 +32,9 @@ class SignUp(TemplateView):
     print'content 3rd'
     template_name ='webapp/SignUp.html'
 
+class popOut(TemplateView):
+    print'pop Up'
+    template_name = 'webapp/modalWindow.html'
     # return render_to_response('webapp/SignUp.html')
 
 # class Content(TemplateView):
@@ -140,7 +143,9 @@ def checkOut(request):
         print orderId
         my_datetime= datetime.datetime.now()
         product = ProductElectronics.objects.filter(modelName=model).first()
-        print 'product>>>>>>>>>>>>>',product
+        print 'product>>>>>>>>>>>>>',product,product.modelName
+        product.iventory= product.iventory-qty
+        product.selledCount=product.selledCount+qty
         my_datetime=timezone.make_aware(my_datetime, timezone.get_current_timezone())
         order = ProductOrders(orderId=orderId,
                 modelName =product,
@@ -149,8 +154,8 @@ def checkOut(request):
                 quantity = qty,
                 price =price,
                 dateOfPurchase=my_datetime)
-        print 'order',order
-        return
+        print 'order',order,'  product',product
+        product.save()
         order.save()
         print'Sucess......................'
         return JsonResponse({'Msg': 'Success'}, status=200)
