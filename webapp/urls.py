@@ -10,7 +10,8 @@ url(r'^signup',SignUp.as_view(), name='signup'),
 url(r'^home',HomePage.as_view(), name='home'),
 url(r'^relogin',ReLogIn.as_view(), name='relogin'),
 url(r'^checkout',checkOut,name='checkOut'),
-url(r'^popup',popOut.as_view(),name='popup'),
+    url(r'^popUp',popOut.as_view(),name='popUp'),
+# url(r'^popup',popOut.as_view(),name='popup'),
 
 ]
 

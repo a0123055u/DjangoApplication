@@ -21,7 +21,7 @@
         <div class="tab-content clearfix">
 			  <div class="tab-pane active" id="1a">
                      <!--<h3>Electronics</h3>-->
-<div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-pinning></div>
+<div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-pinning ui-grid-selection></div>
                      <!--<div class="gridStyle" ng-grid="gridOptions"></div>-->
               </div>
 			  <div class="tab-pane " id="1b">
@@ -59,7 +59,7 @@
 
     var app = angular.module('myApp', ['ngAnimate','ngRoute','ngTouch','ui.grid','ui.grid.edit','ui.grid.pinning','ui.grid.selection','ui.bootstrap']);
 app.controller('MyCtrl',['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModal',function($scope,$log,$timeout,$uiGridConstants,$templateCache,$http,$uibModal) {
-
+$cntrl = this;
 $scope.data=[{id: '1',Qty: '1'},{id: '2',Qty: '2'}]
 
 
@@ -76,8 +76,8 @@ $scope.gridOptions.columnDefs = [
     { name:'Price', width:100, pinnedLeft:true },
     { name:'Company', width:100, pinnedLeft:true  },
     { name:'Discount', width:150  },
-     { name: 'Cart', displayName: 'Cart', type: 'boolean',cellTemplate: '<input type="checkbox" ng-model="row.entity.cart">'},
-      { name: 'Qty', displayName: 'Qty',editableCellTemplate: 'ui-grid/dropdownEditor',width: '20%',editDropdownValueLabel:'Qty',editDropdownOptionsArray:$scope.data}
+     <!--{ name: 'Cart', displayName: 'Cart', type: 'boolean',cellTemplate: '<input type="checkbox" ng-model="row.entity.cart">'},-->
+      <!--{ name: 'Qty', displayName: 'Qty',editableCellTemplate: 'ui-grid/dropdownEditor',width: '20%',editDropdownValueLabel:'Qty',editDropdownOptionsArray:$scope.data}-->
       <!--type: 'integer',cellTemplate: '<select name="repeatSelect" id="repeatSelect" ng-model="qty"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select>'},-->
      ]
 
@@ -157,6 +157,21 @@ $scope.gridOptions.columnDefs = [
         "Discount": "10%",
         "id": 11
     },];
+    var test=[];
+    $cntrl.selection =[];
+     $scope.gridOptions.onRegisterApi = function(gridApi){
+      //set gridApi on scope
+      $scope.gridApi = gridApi;
+      gridApi.selection.on.rowSelectionChanged($scope,function(row){
+        var msg = 'row selected ' + row.isSelected;
+        $log.log(msg);
+      });
+
+      gridApi.selection.on.rowSelectionChangedBatch($scope,function(rows){
+        var msg = 'rows changed ' + rows.length;
+        $log.log(msg);
+      });
+    };
     <!--$timeout(function() {-->
         <!--if($scope.gridApi.selection.selectRow){-->
           <!--$scope.gridApi.selection.selectRow($scope.gridOptions.data[0]);-->
@@ -164,48 +179,77 @@ $scope.gridOptions.columnDefs = [
         <!--});-->
 
         $scope.checkOut = function(){
-        $scope.modalInstancce = $uibModal.open({
-        ariaLabelledBy : 'modal-title',
-        templateUrl : 'popup',
-        controller : 'ModelHandlerController',
-        controllerAs : '$ctrl',
-        size: 'lg',
-        resolve:{}
-        });
+
 
 
 
         var postPayLoad = [];
         console.log($scope.gridOptions.data);
+         test = $scope.gridApi.selection.getSelectedRows();
+     $cntrl.selection= test;
+    console.log("test------------------------->>>>>>>>>>>.",test);
         angular.forEach($scope.gridOptions.data,function(k,v){
+
+
+
+
         console.log(k);
             if(k['cart']===true){
             postPayLoad.push(k);
             }
         });
-        $http({ method: 'POST',
-                  url: 'checkout',
-                   dataType: "json",
-                   data:{postPayLoad},
-                }).then(function successCallback(response) {
-                },function error(response){
+
+         var modalInstance = $uibModal.open({
+            animation: true,
+            templateUrl: 'popUp',
+            controller: 'ModelHandlerController',
+            controllerAs: 'vm',
+
+            size: 'lg',
+            scope:  $cntrl.selection,
+            resolve: {
+                item: function () {
+                    return $cntrl.selection;
+                }
+            }
+        });
+        <!--$http({ method: 'POST',-->
+                  <!--url: 'checkout',-->
+                   <!--dataType: "json",-->
+                   <!--data:{test},-->
+                <!--}).then(function successCallback(response) {-->
+                <!--},function error(response){-->
 
 
-                });
-        console.log("postPayLoad",postPayLoad);
+                <!--});-->
+        console.log("postPayLoad",$cntrl.selection);
         }
 
 
 }]);
 
-app.controller("ModelHandlerController",['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModalInstance',function($scope,$uibModalInstance){
+app.controller("ModelHandlerController",['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModalInstance','item','scope',function($scope,$uibModalInstance,item,scope){
+    var vm = this;
+    vm.item = item;
+    vm.scope = scope;
+     vm.selected = {
+    item1: vm.item[0]
+  };
 
+    var test = vm.item[0];
+   //$scope = vm.item;
+   //var test = $scope.selection;
+   angular.forEach(test, function(k,v){
+   console.log("test",k,v);
+
+   });
+  // console.log("test",test[0]);
  $scope.cancelModal = function(){
  console.log("cancelmodal");
- $uibModalInstance.dismiss('close');
+ $uibModalInstance.close();
  }
  $scope.ok = function(){
- $uibModalInstance.close('save');
+ $uibModalInstance.close();
 
  }
 
