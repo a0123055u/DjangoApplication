@@ -158,7 +158,7 @@ $scope.gridOptions.columnDefs = [
         "id": 11
     },];
     var test=[];
-    $cntrl.selection =[];
+    $scope.selection =[];
      $scope.gridOptions.onRegisterApi = function(gridApi){
       //set gridApi on scope
       $scope.gridApi = gridApi;
@@ -186,7 +186,7 @@ $scope.gridOptions.columnDefs = [
         var postPayLoad = [];
         console.log($scope.gridOptions.data);
          test = $scope.gridApi.selection.getSelectedRows();
-     $cntrl.selection= test;
+     $scope.selection= test;
     console.log("test------------------------->>>>>>>>>>>.",test);
         angular.forEach($scope.gridOptions.data,function(k,v){
 
@@ -206,10 +206,10 @@ $scope.gridOptions.columnDefs = [
             controllerAs: 'vm',
 
             size: 'lg',
-            scope:  $cntrl.selection,
+            scope:$scope,
             resolve: {
                 item: function () {
-                    return $cntrl.selection;
+                    return $scope;
                 }
             }
         });
@@ -222,27 +222,29 @@ $scope.gridOptions.columnDefs = [
 
 
                 <!--});-->
-        console.log("postPayLoad",$cntrl.selection);
+        console.log("postPayLoad",$scope.selection);
         }
 
 
 }]);
 
-app.controller("ModelHandlerController",['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModalInstance','item','scope',function($scope,$uibModalInstance,item,scope){
+app.controller("ModelHandlerController",['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModalInstance','item',function($scope,$uibModalInstance,item){
     var vm = this;
     vm.item = item;
-    vm.scope = scope;
-     vm.selected = {
-    item1: vm.item[0]
-  };
+   // vm.scope= scope;
+    console.log(item,$scope.selection);
+   // vm.scope = scope;
+     <!--vm.selected = {-->
+    <!--item1: vm.item[0]-->
+  <!--};-->
 
-    var test = vm.item[0];
+   // var test = vm.item[0];
    //$scope = vm.item;
    //var test = $scope.selection;
-   angular.forEach(test, function(k,v){
-   console.log("test",k,v);
+   <!--angular.forEach(test, function(k,v){-->
+   <!--console.log("test",k,v);-->
 
-   });
+   <!--});-->
   // console.log("test",test[0]);
  $scope.cancelModal = function(){
  console.log("cancelmodal");
