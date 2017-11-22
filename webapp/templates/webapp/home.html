@@ -228,34 +228,23 @@ $scope.gridOptions.columnDefs = [
 
 }]);
 
-app.controller("ModelHandlerController",['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModalInstance','item',function($scope,$uibModalInstance,item){
+app.controller("ModelHandlerController",function($scope,$uibModalInstance,item){
     var vm = this;
     vm.item = item;
    // vm.scope= scope;
     console.log(item,$scope.selection);
-   // vm.scope = scope;
-     <!--vm.selected = {-->
-    <!--item1: vm.item[0]-->
-  <!--};-->
 
-   // var test = vm.item[0];
-   //$scope = vm.item;
-   //var test = $scope.selection;
-   <!--angular.forEach(test, function(k,v){-->
-   <!--console.log("test",k,v);-->
-
-   <!--});-->
   // console.log("test",test[0]);
  $scope.cancelModal = function(){
  console.log("cancelmodal");
  $uibModalInstance.close();
- }
+ };
  $scope.ok = function(){
  $uibModalInstance.close();
 
- }
+ };
 
-}]);
+});
 
 
 
