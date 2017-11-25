@@ -249,13 +249,17 @@ $scope.total= [];
  if($scope.total[index] && $scope.qty[index]<=10){
  $scope.qty[index]+=1;
   $scope.total[index]+= parseInt(qty)*parseInt(price[1]);
+  $scope.netTotalCalculate(index);
+   console.log("TESTING 2");
 
  }
  else if($scope.qty[index] >10 && $scope.total[index]){
   }
  else{
+ console.log("TESTING 1");
   $scope.total[index]= parseInt(qty)*parseInt(price[1]);
   $scope.qty[index]=1;
+  $scope.netTotalCalculate(index);
  }
 
 
@@ -266,7 +270,8 @@ console.log(qty,price[1]);
  var price = price.split("$");
  if($scope.total[index] && $scope.total[index]>0 && $scope.qty[index]>0){
   $scope.total[index]-= parseInt(price[1]);
-  $scope.qty[index]-=1;
+   $scope.qty[index]-=1;
+   $scope.netTotalCalculate(index);
  }
  else{
 
@@ -276,6 +281,18 @@ console.log(qty,price[1]);
 console.log("reduce",qty,price[1]);
 
  };
+$scope.netTotalCalculate = function(index){
+console.log("testiii",$scope.total);
+var totalNet=0;
+angular.forEach($scope.total,function(x){
+ totalNet += x;
+
+});
+$scope.netTotal ="$"+totalNet;
+
+};
+
+
 
 
 });
