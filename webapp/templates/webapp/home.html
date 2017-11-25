@@ -186,7 +186,7 @@ $scope.gridOptions.columnDefs = [
         console.log($scope.gridOptions.data);
          test = $scope.gridApi.selection.getSelectedRows();
      $scope.selection= test;
-    console.log("test------------------------->>>>>>>>>>>.",test);
+
         angular.forEach($scope.gridOptions.data,function(k,v){
 
 
@@ -212,34 +212,31 @@ $scope.gridOptions.columnDefs = [
                 }
             }
         });
-        <!--$http({ method: 'POST',-->
-                  <!--url: 'checkout',-->
-                   <!--dataType: "json",-->
-                   <!--data:{test},-->
-                <!--}).then(function successCallback(response) {-->
-                <!--},function error(response){-->
 
-
-                <!--});-->
         console.log("postPayLoad",$scope.selection);
         }
 
 
 }]);
 
-app.controller("ModelHandlerController",function($scope,$uibModalInstance,item){
+app.controller("ModelHandlerController",function($scope,$uibModalInstance,item,$http){
     var vm = this;
     vm.item = item;
-   // vm.scope= scope;
-    console.log(item,$scope.selection);
 
-  // console.log("test",test[0]);
  $scope.cancelModal = function(){
  console.log("cancelmodal");
  $uibModalInstance.close();
  };
  $scope.ok = function(){
- $uibModalInstance.close();
+ $http({ method: 'POST',
+                  url: 'checkout',
+                   dataType: "json",
+                   data:$scope.selection,
+                }).then(function successCallback(response) {
+                },function error(response){
+
+
+                });
 
  };
 $scope.qty=[];
@@ -250,16 +247,25 @@ $scope.total= [];
  $scope.qty[index]+=1;
   $scope.total[index]+= parseInt(qty)*parseInt(price[1]);
   $scope.netTotalCalculate(index);
-   console.log("TESTING 2");
+
+  $scope.selection[index]['qty']=$scope.qty[index];
+    $scope.selection[index]['total']= $scope.total[index];
+    console.log("selection", $scope.selection[index]);
+
 
  }
  else if($scope.qty[index] >10 && $scope.total[index]){
   }
  else{
- console.log("TESTING 1");
+
   $scope.total[index]= parseInt(qty)*parseInt(price[1]);
   $scope.qty[index]=1;
+  $scope.selection[index]['qty']=$scope.qty[index];
+    $scope.selection[index]['total']= $scope.total[index];
+    console.log("selection", $scope.selection[index]);
+
   $scope.netTotalCalculate(index);
+
  }
 
 
@@ -282,7 +288,7 @@ console.log("reduce",qty,price[1]);
 
  };
 $scope.netTotalCalculate = function(index){
-console.log("testiii",$scope.total);
+
 var totalNet=0;
 angular.forEach($scope.total,function(x){
  totalNet += x;

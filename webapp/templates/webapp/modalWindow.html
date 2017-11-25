@@ -18,14 +18,16 @@
     <th>Price</th>
     <th>Company</th>
    <th>Discount</th>
-   <th></th>
+      <th></th>
+<th></th>
+      <th></th>
    <th>Qty</th>
       <th>Total</th>
   </tr>
    {% verbatim %}
   <tr ng-repeat ="value in selection ">
 
-    <td ng-repeat = "x in value track by $index" ><section ng-bind="x"></section></td>
+    <td ng-repeat = "(key,value) in value track by $index" ><section ng-bind="value" ng-if="key!='total'" ng-show="key != 'qty'" ></section></td>
    <td>
        <button ng-model="increaseQty[$index]" ng-click="calculateTotal(1,value['Price'],$index)">+</button>
 
@@ -36,14 +38,14 @@
           <section  ng-bind="qty[$index]"></section>
 
       </td>
-      <td><section   ng-bind="total[$index]"></section></td>
+      <td><section   ng-bind="'$'+total[$index]"></section></td>
   </tr>
      <tr>
          <td></td>
          <td></td>
     <td></td>
     <td></td>
-   <td></td>
+   <td><bold>NET TOTAL</bold></td>
    <td></td>
          <td><section ng-bind="netTotal"></section></td>
 
