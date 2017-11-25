@@ -43,7 +43,7 @@
 <div class="row">
 
     <div class="col-sm-2 col-3">
-        <button  name="CheckOut" ng-model="checkOut"  class="btn btn-primary" ng-click="checkOut()">Check Out</button>
+        <button  name="CheckOut" ng-model="checkOut"  class="btn btn-primary" ng-click="checkOut()">View Details</button>
     </div>
 
 
@@ -71,7 +71,6 @@ $scope.data=[{id: '1',Qty: '1'},{id: '2',Qty: '2'}]
     showGridFooter:true
     };
 $scope.gridOptions.columnDefs = [
-    { name: 'id' },
     { name:'Model', width:250, pinnedLeft:true },
     { name:'Price', width:100, pinnedLeft:true },
     { name:'Company', width:100, pinnedLeft:true  },
@@ -91,7 +90,7 @@ $scope.gridOptions.columnDefs = [
         "Price": "$500",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 1,
+
         <!--'Cart':'<button ng-click="grid.appScope.clickHandler()">Click Here</button>',-->
         <!--'<button ng-click="grid.myApp.clickHandler()">+</button>',-->
     },
@@ -100,62 +99,62 @@ $scope.gridOptions.columnDefs = [
         "Price": "$700",
         "Company": "HTC",
         "Discount": "12%",
-        "id": 2,
+
     },
     {
         "Model": "HTC U11",
         "Price": "$900",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 3,
+
     },{
         "Model": "HTC U Ultra",
         "Price": "$780",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 4,
+
     },{
         "Model": "HTC U Play",
         "Price": "$560",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 5,
+
     },{
         "Model": "HTC One A9s",
         "Price": "$600",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 6,
+
     },{
         "Model": "HTC Desire 10 pro dual Sim",
         "Price": "$451",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 7,
+
     },{
         "Model": "HTC 10",
         "Price": "$390",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 8,
+
     },{
         "Model": "HTC Desire 830 dual Sim",
         "Price": "$200",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 9,
+
     },{
         "Model": "HTC 628 Desire Dual Sim",
         "Price": "$564",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 10,
+
     },{
         "Model": "HTC One X9",
         "Price": "$746",
         "Company": "HTC",
         "Discount": "10%",
-        "id": 11
+
     },];
     var test=[];
     $scope.selection =[];
@@ -243,6 +242,41 @@ app.controller("ModelHandlerController",function($scope,$uibModalInstance,item){
  $uibModalInstance.close();
 
  };
+$scope.qty=[];
+$scope.total= [];
+ $scope.calculateTotal = function(qty,price,index){
+ var price = price.split("$");
+ if($scope.total[index] && $scope.qty[index]<=10){
+ $scope.qty[index]+=1;
+  $scope.total[index]+= parseInt(qty)*parseInt(price[1]);
+
+ }
+ else if($scope.qty[index] >10 && $scope.total[index]){
+  }
+ else{
+  $scope.total[index]= parseInt(qty)*parseInt(price[1]);
+  $scope.qty[index]=1;
+ }
+
+
+console.log(qty,price[1]);
+ };
+
+ $scope.reduceQuantity = function(qty,price,index){
+ var price = price.split("$");
+ if($scope.total[index] && $scope.total[index]>0 && $scope.qty[index]>0){
+  $scope.total[index]-= parseInt(price[1]);
+  $scope.qty[index]-=1;
+ }
+ else{
+
+ }
+
+
+console.log("reduce",qty,price[1]);
+
+ };
+
 
 });
 
