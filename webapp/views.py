@@ -12,13 +12,14 @@ from django.template import loader
 from webapp.models import user,ProductOrders,ProductElectronics
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_protect,requires_csrf_token
 
 
 # from passlib.hash import md5_crypt as md5
 # from passlib.hash import sha256_crypt as sha256
 # from passlib.hash import sha512_crypt as sha512
 
-
+@csrf_protect
 def index(request):
     print('index')
 
@@ -48,7 +49,7 @@ class HomePage(TemplateView):
     print'Home page Redirected'
     template_name = 'webapp/Home.html'
 
-
+@csrf_protect
 def save(request):
     print('Test request')
     context = {'data': 'reached', 'response': 'Success'}
@@ -79,7 +80,7 @@ def save(request):
 
 
 
-
+@csrf_protect
 def singin(request):
     print'request',request.POST
     # pdb.set_trace()
@@ -123,7 +124,7 @@ def singin(request):
 
 
 
-
+@requires_csrf_token
 def checkOut(request):
     if request.method == 'POST':
         post_body = json.loads(request.body)
@@ -136,6 +137,8 @@ def checkOut(request):
             model=x["Model"]
             # model = [mod.encode('utf-8') for mod in model]
             price= x["total"]
+            # test = x['X-CSRFToken']
+            # print'cookies',test
             # price = price.strip('$')
             price = int(price)
             userName = request.session['username']
