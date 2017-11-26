@@ -12,14 +12,14 @@ from django.template import loader
 from webapp.models import user,ProductOrders,ProductElectronics
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_protect,requires_csrf_token
+from django.views.decorators.csrf import csrf_protect,requires_csrf_token,csrf_exempt
 
 
 # from passlib.hash import md5_crypt as md5
 # from passlib.hash import sha256_crypt as sha256
 # from passlib.hash import sha512_crypt as sha512
 
-@csrf_protect
+
 def index(request):
     print('index')
 
@@ -49,7 +49,7 @@ class HomePage(TemplateView):
     print'Home page Redirected'
     template_name = 'webapp/Home.html'
 
-@csrf_protect
+@csrf_exempt
 def save(request):
     print('Test request')
     context = {'data': 'reached', 'response': 'Success'}
@@ -95,20 +95,10 @@ def singin(request):
         if validUserName.exists():
             password = validUserName.values()[0]['password']
             if check_password(passWord,password): #used to check hashed password under the given string in post.
-                # template= loader.get_template('webapp/SignUp.html')
-                # return HttpResponse(template.render(context=None))
-                # url = reverse('content',permanent=True, kwargs={'classname': Content})
-                # return render(request, "webapp/SignUp.html",context=None)
-                # response = TemplateResponse(request, 'webapp/SignUp.html', {})
+
                 request.session['username'] = userName
                 request.session['email']=validUserName.values()[0]['email']
                 return HttpResponseRedirect(reverse('home'))
-                # import pdb
-                # pdb.set_trace()
-                # return render_to_response('webapp/SignUp.html',context=None, content_type=None, status=225)
-                # return response
-                # return redirect('/content',permanent=True,kwargs={'classname':Content})
-                print 'after render'
 
             else:
                 if password==passWord:
@@ -130,16 +120,11 @@ def checkOut(request):
         post_body = json.loads(request.body)
         postBody = post_body
         print'post_body',post_body
-        print'======'
-        print'postBody',postBody
+
         orderArray=[]
         for x in postBody:
             model=x["Model"]
-            # model = [mod.encode('utf-8') for mod in model]
             price= x["total"]
-            # test = x['X-CSRFToken']
-            # print'cookies',test
-            # price = price.strip('$')
             price = int(price)
             userName = request.session['username']
             email = request.session['email']
