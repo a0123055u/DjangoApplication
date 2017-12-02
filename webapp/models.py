@@ -32,3 +32,10 @@ class ProductOrders(models.Model):
     quantity = models.IntegerField(null= False,blank=False)
     dateOfPurchase = models.DateTimeField(default=datetime.now(),null=False,blank=False)
     price = models.IntegerField(default=0,null=False,blank=False)
+    transId = models.CharField(max_length=32,null=False,blank=False,default="tx1234")
+
+class Transaction(models.Model):
+    transBundleId = models.CharField(primary_key=True,max_length=32,null=False,blank=False)
+    transIds = models.CharField(max_length=512,null=False,blank=False)
+    name = models.CharField(max_length=40,null=True,blank=False)
+    transTime = models.DateTimeField(default=datetime.now(),null=False,blank=False)
