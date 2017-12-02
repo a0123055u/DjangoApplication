@@ -9,10 +9,11 @@ from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.response import Response
 from django.template import loader
-from webapp.models import user,ProductOrders,ProductElectronics
+from webapp.models import user,ProductOrders,ProductElectronics,Transaction
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_protect,requires_csrf_token,csrf_exempt
+from django.db import transaction
 
 
 # from passlib.hash import md5_crypt as md5
@@ -115,13 +116,22 @@ def singin(request):
 
 
 @requires_csrf_token
+@transaction.atomic
 def checkOut(request):
     if request.method == 'POST':
         post_body = json.loads(request.body)
         postBody = post_body
         print'post_body',post_body
+        product_array={}
+        order_array={}
+        transactionCount = Transaction.objects.count()
+        transactionCount +=1
+        print 'transactionCount',transactionCount
+        transactionId = "Txn"+str(transactionCount)
+        transactionBundleId = "TxnB"+str(transactionCount)
 
         orderArray=[]
+
         for x in postBody:
             model=x["Model"]
             price= x["total"]
@@ -136,6 +146,10 @@ def checkOut(request):
             print orderId
             my_datetime= datetime.datetime.now()
             product = ProductElectronics.objects.filter(modelName=model).first()
+
+
+
+
             # print 'product>>>>>>>>>>>>>',product,product.modelName
             product.iventory= product.iventory-qty
             product.selledCount=product.selledCount+qty
@@ -146,14 +160,24 @@ def checkOut(request):
                     email =email,
                     quantity = qty,
                     price =price,
-                    dateOfPurchase=my_datetime)
-            product.save()
-            order.save()
-            print 'order',order,'  product',product
+                    dateOfPurchase=my_datetime,
+                                  transId = transactionId)
+            try:
+                print 'order', order_array, '  product', product_array
+                tansactionTable = Transaction(transBundleId = transactionBundleId,
+                                              transIds=transactionId,name= userName,transTime =my_datetime )
+                with transaction.atomic():
+                    order.save()
+                    product.save()
 
-
-        print'Sucess......................'
-        return JsonResponse({'Msg': 'Success'}, status=200)
+            finally:
+                print'success in prod and order'
+        try:
+            with transaction.atomic():
+                tansactionTable.save()
+        finally:
+            print 'Success in Tnx '
+    return JsonResponse({'Msg': 'Success','Tx':transactionBundleId}, status=200)
 
 
 
