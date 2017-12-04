@@ -230,6 +230,17 @@ app.controller("ModelHandlerController",function($scope,$uibModalInstance,item,$
  $uibModalInstance.close();
  };
  $scope.ok = function(){
+ $scope.tnxBundle =[];
+ angular.forEach($scope.selection,function(value){
+ if(value && value['qty']){
+ console.log("value",value['qty'],value.qty);
+ $scope.tnxBundle.push(value);
+ console.log("$scope.selection",value);
+ }
+
+$scope.selection = $scope.tnxBundle;
+ console.log("$scope.selection----------",$scope.tnxBundle);
+ });
  //$scope.selection['X-CSRFToken']= '{{csrf_token}}'
  $http({ method: 'POST',
                   url: 'checkout',
