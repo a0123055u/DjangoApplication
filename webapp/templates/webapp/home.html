@@ -21,7 +21,12 @@
         <div class="tab-content clearfix">
 			  <div class="tab-pane active" id="1a">
                      <!--<h3>Electronics</h3>-->
+                  <div class="alert alert-info" ng-show="showMsg">
+  Hi User your Transaction is success, Your Tnx Number is{{errorMsg}}
+</div>
 <div id="grid1" ui-grid="gridOptions" class="grid" ui-grid-pinning ui-grid-selection></div>
+
+
                      <!--<div class="gridStyle" ng-grid="gridOptions"></div>-->
               </div>
 			  <div class="tab-pane " id="1b">
@@ -67,6 +72,7 @@
 app.controller('MyCtrl',['$scope','$log','$timeout','uiGridConstants','$templateCache','$http','$uibModal','$cookies', function($scope,$log,$timeout,$uiGridConstants,$templateCache,$http,$uibModal,$cookies) {
 $cntrl = this;
 $scope.data=[{id: '1',Qty: '1'},{id: '2',Qty: '2'}]
+$scope.showMsg=false;
 
 
  $scope.gridOptions = {
@@ -233,13 +239,13 @@ app.controller("ModelHandlerController",function($scope,$uibModalInstance,item,$
  $scope.tnxBundle =[];
  angular.forEach($scope.selection,function(value){
  if(value && value['qty']){
- console.log("value",value['qty'],value.qty);
+
  $scope.tnxBundle.push(value);
  console.log("$scope.selection",value);
  }
 
 $scope.selection = $scope.tnxBundle;
- console.log("$scope.selection----------",$scope.tnxBundle);
+
  });
  //$scope.selection['X-CSRFToken']= '{{csrf_token}}'
  $http({ method: 'POST',
@@ -247,10 +253,18 @@ $scope.selection = $scope.tnxBundle;
                    dataType: "json",
                    data:$scope.selection,
                 }).then(function successCallback(response) {
+                console.log(response,response.data.Tx);
+
+
+                $scope.errorMsg = response.data.Tx;
+                alert("Your Tnx number is "+response.data.Tx);
+
                 },function error(response){
 
 
                 });
+                $scope.showMsg=true;
+                $uibModalInstance.close();
 
  };
 $scope.qty=[];
